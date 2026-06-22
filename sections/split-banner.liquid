@@ -1,0 +1,107 @@
+<div class="split-banner section-{{ section.id }}-padding page-width">
+  <div class="split-banner__grid grid--asymmetric" style="display: flex; flex-direction: column; gap: var(--grid-mobile-horizontal-spacing);">
+    {%- for block in section.blocks -%}
+      <div class="split-banner__item" {{ block.shopify_attributes }} style="flex: 1; position: relative; overflow: hidden; border-radius: var(--media-radius);">
+        <a href="{{ block.settings.link }}" class="split-banner__link" style="display: block; width: 100%; height: 100%; text-decoration: none;">
+          <div class="split-banner__media media media--square" style="padding-bottom: 120%; position: relative;">
+            {%- if block.settings.image != blank -%}
+              <img
+                src="{{ block.settings.image | image_url: width: 1500 }}"
+                alt="{{ block.settings.image.alt | escape }}"
+                loading="lazy"
+                width="{{ block.settings.image.width }}"
+                height="{{ block.settings.image.height }}"
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease;"
+              >
+            {%- else -%}
+              {{ 'collection-' | append: forloop.index | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+            <div class="split-banner__overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.2);"></div>
+          </div>
+          <div class="split-banner__content" style="position: absolute; bottom: 2rem; left: 2rem; right: 2rem; text-align: center; color: #fff;">
+            <h3 class="h2" style="color: #fff; margin-bottom: 1rem;">{{ block.settings.heading | escape }}</h3>
+            {%- if block.settings.button_label != blank -%}
+              <span class="button button--secondary">{{ block.settings.button_label | escape }}</span>
+            {%- endif -%}
+          </div>
+        </a>
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+<style>
+  .split-banner__item:hover img {
+    transform: scale(1.05);
+  }
+  @media screen and (min-width: 750px) {
+    .split-banner__grid {
+      flex-direction: row !important;
+      gap: var(--grid-desktop-horizontal-spacing) !important;
+    }
+    .split-banner__item {
+      flex: 1;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Split Banner",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 2,
+  "settings": [],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Column",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Shop Collection",
+          "label": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "default": "Explore",
+          "label": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Split Banner",
+      "blocks": [
+        {
+          "type": "column",
+          "settings": {
+            "heading": "Shop Men",
+            "button_label": "Explore Men"
+          }
+        },
+        {
+          "type": "column",
+          "settings": {
+            "heading": "Shop Women",
+            "button_label": "Explore Women"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

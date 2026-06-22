@@ -1,0 +1,400 @@
+/* RIYAH THEME CUSTOM CSS */
+/* ----------------------------------------- */
+/* 1. Asymmetric Grid Utilities */
+/* ----------------------------------------- */
+.grid--asymmetric {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--grid-mobile-vertical-spacing) var(--grid-mobile-horizontal-spacing);
+}
+
+@media screen and (min-width: 750px) {
+  .grid--asymmetric {
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--grid-desktop-vertical-spacing) var(--grid-desktop-horizontal-spacing);
+  }
+  
+  .grid--asymmetric .grid__item--large {
+    grid-column: span 8;
+  }
+  
+  .grid--asymmetric .grid__item--small {
+    grid-column: span 4;
+  }
+  
+  .grid--asymmetric .grid__item--half {
+    grid-column: span 6;
+  }
+}
+
+/* ----------------------------------------- */
+/* 2. Text Reveal Animations */
+/* ----------------------------------------- */
+.animate--stagger-words .word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.animate--stagger-words.scroll-triggered .word {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ----------------------------------------- */
+/* 3. Logo Marquee Animation */
+/* ----------------------------------------- */
+.logo-marquee {
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+  background: rgb(var(--color-background));
+  padding: 2rem 0;
+}
+
+.logo-marquee__track {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4rem;
+  padding-right: 4rem;
+  min-width: 100%;
+}
+
+@media screen and (min-width: 750px) {
+  .logo-marquee__track {
+    gap: 8rem;
+  }
+}
+
+.logo-marquee:hover .logo-marquee__track {
+  animation-play-state: paused;
+}
+
+@keyframes scroll-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+@keyframes scroll-right {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(0); }
+}
+
+.logo-marquee--direction-left .logo-marquee__track {
+  animation: scroll-left var(--marquee-speed, 20s) linear infinite;
+}
+
+.logo-marquee--direction-right .logo-marquee__track {
+  animation: scroll-right var(--marquee-speed, 20s) linear infinite;
+}
+
+.logo-marquee__item img {
+  max-width: 150px;
+  height: auto;
+  object-fit: contain;
+  filter: grayscale(100%);
+  opacity: 0.6;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+.logo-marquee__item:hover img {
+  filter: grayscale(0%);
+  opacity: 1;
+}
+
+/* ----------------------------------------- */
+/* 4. Product Card Hover Swap */
+/* ----------------------------------------- */
+.card__media .media img.secondary-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.6s ease;
+  z-index: 1;
+}
+
+.card:hover .card__media .media img.secondary-image {
+  opacity: 1;
+}
+
+/* ----------------------------------------- */
+/* 5. Header Blur / Shrink */
+/* ----------------------------------------- */
+.header-wrapper--sticky {
+  transition: background-color 0.3s ease, padding 0.3s ease, box-shadow 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.header-wrapper--sticky.is-scrolled {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  background-color: rgba(var(--color-background), 0.9);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* ----------------------------------------- */
+/* 6. Editorial Aesthetic Adjustments */
+/* ----------------------------------------- */
+h1, h2, h3, .h1, .h2, .h3 {
+  letter-spacing: -0.02em;
+}
+
+.button {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  border-radius: 0;
+}
+
+/* ----------------------------------------- */
+/* 7. Collection Layout Toggle */
+/* ----------------------------------------- */
+.grid--list-view .grid__item {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+.grid--list-view .product-card-wrapper .card {
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+}
+.grid--list-view .product-card-wrapper .card__inner {
+  width: 30%;
+}
+.grid--list-view .product-card-wrapper .card__content {
+  width: 70%;
+  padding: 0;
+}
+@media screen and (max-width: 749px) {
+  .grid--list-view .product-card-wrapper .card {
+    flex-direction: column;
+  }
+  .grid--list-view .product-card-wrapper .card__inner,
+  .grid--list-view .product-card-wrapper .card__content {
+    width: 100%;
+  }
+}
+
+/* ----------------------------------------- */
+/* 8. Phase 4: Final Polish & Editorial Refinements */
+/* ----------------------------------------- */
+
+/* Blog & Article */
+.article-template__title {
+  font-size: clamp(3rem, 5vw, 6rem);
+  line-height: 1.1;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.article-template header.page-width--narrow {
+  text-align: center;
+  margin-top: 4rem;
+  margin-bottom: 4rem;
+}
+.article-template__content {
+  font-size: 1.6rem;
+  line-height: 1.8;
+  color: rgba(var(--color-foreground), 0.9);
+}
+.article-template__content > p:first-of-type {
+  font-size: 2rem;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+}
+@media screen and (min-width: 990px) {
+  .page-width--narrow {
+    max-width: 68rem !important; /* Optimal reading measure */
+  }
+}
+
+/* 404 Page */
+.template-404 .title {
+  font-size: clamp(6rem, 10vw, 12rem);
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  margin-bottom: 3rem;
+}
+
+/* Cart Drawer Refinements */
+.drawer__inner {
+  background-color: rgb(var(--color-background));
+  border-left: 1px solid rgba(var(--color-foreground), 0.1);
+}
+cart-drawer .drawer__header {
+  border-bottom: 1px solid rgba(var(--color-foreground), 0.1);
+  padding-bottom: 2rem;
+}
+.cart-drawer__footer {
+  border-top: 1px solid rgba(var(--color-foreground), 0.1);
+  padding-top: 2rem;
+}
+cart-drawer .cart-item__name {
+  font-family: var(--font-body-family);
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 1.2rem;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+}
+.cart-drawer .totals > h2 {
+  font-family: var(--font-body-family);
+  text-transform: uppercase;
+  font-size: 1.4rem;
+  letter-spacing: 0.1em;
+}
+.cart-drawer .totals__total-value {
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+/* Customer Account Pages */
+.customer h1 {
+  font-size: 3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 400;
+  text-align: center;
+  margin-bottom: 4rem;
+}
+.customer table th {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 1.1rem;
+  opacity: 0.7;
+}
+
+/* Mobile Spacing Tweaks (375px) */
+@media screen and (max-width: 749px) {
+  .page-width {
+    padding: 0 2rem;
+  }
+  .section + .section {
+    margin-top: 6rem;
+  }
+  .customer h1 {
+    font-size: 2.4rem;
+  }
+}
+
+/* Tablet & Desktop Spacing Tweaks */
+@media screen and (min-width: 750px) {
+  .section + .section {
+    margin-top: 10rem;
+  }
+}
+
+/* ----------------------------------------- */
+/* 9. Phase 5: Submission Polish */
+/* ----------------------------------------- */
+
+/* Newsletter Form */
+.newsletter-form__field-wrapper .field__input {
+  border-bottom: 1px solid rgba(var(--color-foreground), 1) !important;
+  font-size: 1.4rem;
+  letter-spacing: 0.05em;
+}
+.newsletter-form__button {
+  background: transparent !important;
+  color: rgb(var(--color-foreground)) !important;
+  border: none;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.newsletter-form__button:hover {
+  opacity: 0.7;
+}
+
+/* Empty Collection State */
+.collection--empty .title-wrapper {
+  margin-top: 10rem;
+  margin-bottom: 10rem;
+  text-align: center;
+}
+.collection--empty .title-wrapper .title {
+  font-size: clamp(3rem, 5vw, 5rem);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+}
+
+/* Empty Search State */
+.template-search__search {
+  margin-bottom: 6rem;
+}
+.search__results--empty {
+  text-align: center;
+  padding: 10rem 0;
+  font-size: 1.8rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+}
+
+/* Empty Cart State */
+cart-drawer.is-empty .drawer__inner-empty {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 4rem;
+}
+cart-drawer.is-empty .cart__empty-text {
+  font-family: var(--font-heading-family);
+  font-size: 2.4rem;
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  margin-bottom: 3rem;
+}
+
+/* Quantity Selector */
+.quantity {
+  border: 1px solid rgba(var(--color-foreground), 0.2);
+  border-radius: 0 !important;
+  min-height: 4.5rem;
+}
+.quantity::after {
+  display: none !important;
+}
+.quantity__button {
+  width: 4.5rem;
+  background: transparent !important;
+  color: rgb(var(--color-foreground)) !important;
+}
+.quantity__input {
+  font-family: var(--font-body-family);
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+/* Variant Swatches */
+.product-form__input input[type="radio"] + label {
+  border-radius: 0 !important; /* Sharp corners for pills */
+  border: 1px solid rgba(var(--color-foreground), 0.2);
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background-color: transparent;
+  color: rgb(var(--color-foreground));
+  transition: all 0.3s ease;
+}
+.product-form__input input[type="radio"]:checked + label {
+  background-color: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+  border-color: rgb(var(--color-foreground));
+}
+.product-form__input input[type="radio"]:focus-visible + label {
+  box-shadow: 0 0 0 1px rgba(var(--color-foreground), 1);
+}
+/* Square visual swatches */
+.swatch {
+  border-radius: 0 !important;
+  border: 1px solid rgba(var(--color-foreground), 0.2);
+}

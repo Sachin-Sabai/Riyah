@@ -1,0 +1,67 @@
+<div class="testimonials section-{{ section.id }}-padding page-width" style="text-align: center; overflow: hidden;">
+  {%- if section.settings.heading != blank -%}
+    <h2 class="h1" style="margin-bottom: 3rem;">{{ section.settings.heading | escape }}</h2>
+  {%- endif -%}
+
+  <div class="testimonials__slider" style="display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 2rem; padding-bottom: 2rem; scrollbar-width: none;">
+    {%- for block in section.blocks -%}
+      <div class="testimonials__slide" {{ block.shopify_attributes }} style="flex: 0 0 100%; scroll-snap-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 0 2rem;">
+        <p class="h2" style="font-style: italic; max-width: 800px; margin: 0 auto 2rem auto;">"{{ block.settings.quote | escape }}"</p>
+        {%- if block.settings.author != blank -%}
+          <p class="h5" style="letter-spacing: 0.1em; text-transform: uppercase;">&mdash; {{ block.settings.author | escape }}</p>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+<style>
+  .testimonials__slider::-webkit-scrollbar {
+    display: none;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "What They Say",
+      "label": "Heading"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "quote",
+          "default": "The quality and fit are unmatched. A staple in my wardrobe.",
+          "label": "Quote"
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "default": "Vogue Magazine",
+          "label": "Author / Press"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        { "type": "testimonial" },
+        { "type": "testimonial" }
+      ]
+    }
+  ]
+}
+{% endschema %}
