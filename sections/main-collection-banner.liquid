@@ -1,0 +1,118 @@
+<style>
+  .riyah-collection-hero {
+    position: relative;
+    width: 100%;
+    height: 40vh;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .riyah-collection-hero__media {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+  .riyah-collection-hero__media img,
+  .riyah-collection-hero__media svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .riyah-collection-hero__media svg {
+    background: rgba(var(--color-foreground), 0.05);
+    fill: rgba(var(--color-foreground), 0.2);
+  }
+  .riyah-collection-hero__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 2;
+  }
+  .riyah-collection-hero__content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    color: #ffffff;
+    padding: 0 2rem;
+  }
+  .riyah-collection-hero__title {
+    font-family: var(--font-heading-family);
+    font-size: clamp(3rem, 6vw, 5rem);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0 0 1rem;
+    color: #ffffff;
+  }
+  .riyah-collection-hero__description {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+    color: rgba(255, 255, 255, 0.9);
+  }
+</style>
+
+<div class="riyah-collection-hero color-{{ section.settings.color_scheme }}">
+  <div class="riyah-collection-hero__media">
+    {%- if section.settings.show_collection_image and collection.image -%}
+      <img
+        src="{{ collection.image | image_url: width: 2000 }}"
+        alt="{{ collection.image.alt | escape }}"
+        width="{{ collection.image.width }}"
+        height="{{ collection.image.height }}"
+        loading="eager"
+        fetchpriority="high"
+      >
+    {%- else -%}
+      {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {%- endif -%}
+  </div>
+  <div class="riyah-collection-hero__overlay"></div>
+  <div class="riyah-collection-hero__content">
+    <h1 class="riyah-collection-hero__title">
+      <span class="visually-hidden">{{ 'sections.collection_template.title' | t }}: </span>
+      {{- collection.title | escape -}}
+    </h1>
+    {%- if section.settings.show_collection_description and collection.description != blank -%}
+      <div class="riyah-collection-hero__description rte">{{ collection.description }}</div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.main-collection-banner.name",
+  "class": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.main-collection-banner.settings.paragraph.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_description",
+      "default": true,
+      "label": "t:sections.main-collection-banner.settings.show_collection_description.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_image",
+      "default": false,
+      "label": "t:sections.main-collection-banner.settings.show_collection_image.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

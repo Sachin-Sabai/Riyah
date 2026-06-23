@@ -1,0 +1,210 @@
+<nav class="header__inline-menu">
+  <ul class="list-menu list-menu--inline" role="list">
+    {%- for link in section.settings.menu.links -%}
+      <li>
+        {%- if link.links != blank -%}
+            <details id="Details-HeaderMenu-{{ forloop.index }}" class="header-dropdown">
+              <summary
+                id="HeaderMenu-{{ link.handle }}"
+                class="header__menu-item list-menu__item link focus-inset"
+              >
+                <span
+                  {%- if link.child_active %}
+                    class="header__active-menu-item"
+                  {% endif %}
+                >
+                  {{- link.title | escape -}}
+                </span>
+                {{- 'icon-caret.svg' | inline_asset_content -}}
+              </summary>
+              <div
+                id="HeaderMenu-Content-{{ forloop.index }}"
+                class="header-dropdown__content color-{{ section.settings.menu_color_scheme }} gradient motion-reduce global-settings-popup"
+                tabindex="-1"
+              >
+                <ul class="header-dropdown__list list-unstyled" role="list">
+                  {%- for childlink in link.links -%}
+                    <li>
+                      <a
+                        id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}"
+                        href="{{ childlink.url }}"
+                        class="header-dropdown__link link{% if childlink.current %} header-dropdown__link--active{% endif %}"
+                        {% if childlink.current %}
+                          aria-current="page"
+                        {% endif %}
+                      >
+                        {{ childlink.title | escape }}
+                      </a>
+                      {%- if childlink.links != blank -%}
+                        <ul class="header-dropdown__submenu list-unstyled" role="list">
+                          {%- for grandchildlink in childlink.links -%}
+                            <li>
+                              <a
+                                id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}-{{ grandchildlink.handle }}"
+                                href="{{ grandchildlink.url }}"
+                                class="header-dropdown__link link{% if grandchildlink.current %} header-dropdown__link--active{% endif %}"
+                                {% if grandchildlink.current %}
+                                  aria-current="page"
+                                {% endif %}
+                              >
+                                {{ grandchildlink.title | escape }}
+                              </a>
+                            </li>
+                          {%- endfor -%}
+                        </ul>
+                      {%- endif -%}
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            </details>
+        {%- else -%}
+          <a
+            id="HeaderMenu-{{ link.handle }}"
+            href="{{ link.url }}"
+            class="header__menu-item list-menu__item link link--text focus-inset"
+            {% if link.current %}
+              aria-current="page"
+            {% endif %}
+          >
+            <span
+              {%- if link.current %}
+                class="header__active-menu-item"
+              {% endif %}
+            >
+              {{- link.title | escape -}}
+            </span>
+          </a>
+        {%- endif -%}
+      </li>
+      {%- if forloop.index == 2 -%}
+        <!-- Custom Collections Dropdown -->
+        <li>
+          <details class="header-dropdown">
+            <summary class="header__menu-item list-menu__item link focus-inset">
+              <span style="display: flex; align-items: center; gap: 0.8rem;">
+                Collections
+                {{- 'icon-caret.svg' | inline_asset_content -}}
+              </span>
+            </summary>
+            <div class="header-dropdown__content color-scheme-1 gradient motion-reduce global-settings-popup" tabindex="-1">
+              <ul class="header-dropdown__list list-unstyled" role="list">
+                <li><a href="{{ routes.collections_url }}/mens" class="header-dropdown__link">Men's</a></li>
+                <li><a href="{{ routes.collections_url }}/womens" class="header-dropdown__link">Women's</a></li>
+                <li><a href="{{ routes.collections_url }}/tops" class="header-dropdown__link">Tops</a></li>
+                <li><a href="{{ routes.collections_url }}/jackets" class="header-dropdown__link">Jackets</a></li>
+                <li><a href="{{ routes.all_products_collection_url }}" class="header-dropdown__link" style="font-weight: bold; border-top: 1px solid rgba(var(--color-foreground), 0.1); margin-top: 0.5rem; padding-top: 1rem;">Shop All</a></li>
+              </ul>
+            </div>
+          </details>
+        </li>
+      {%- endif -%}
+    {%- endfor -%}
+    <li>
+      <a href="/pages/the-lookbook" class="header__menu-item list-menu__item link link--text focus-inset" style="white-space: nowrap;">
+        <span>The Lookbook</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Add hover support to desktop dropdown menus
+    const menuItems = document.querySelectorAll('details.header-dropdown');
+    
+    menuItems.forEach(details => {
+      let timeout;
+      
+      details.addEventListener('mouseenter', () => {
+        clearTimeout(timeout);
+        // Only trigger on desktop
+        if(window.innerWidth >= 990) {
+          details.setAttribute('open', '');
+          details.querySelector('summary').setAttribute('aria-expanded', 'true');
+        }
+      });
+      
+      details.addEventListener('mouseleave', () => {
+        if(window.innerWidth >= 990) {
+          timeout = setTimeout(() => {
+            details.removeAttribute('open');
+            details.querySelector('summary').setAttribute('aria-expanded', 'false');
+          }, 250); // Small delay before closing
+        }
+      });
+      
+      // Accessibility: Close on Escape
+      details.addEventListener('keyup', (event) => {
+        if(event.key === 'Escape') {
+          details.removeAttribute('open');
+          details.querySelector('summary').setAttribute('aria-expanded', 'false');
+          details.querySelector('summary').focus();
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  /* Standard Dropdown Styling */
+  .header-dropdown {
+    position: relative;
+  }
+  
+  .header-dropdown__content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 220px;
+    background: rgb(var(--color-background));
+    border: 1px solid rgba(var(--color-foreground), 0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    padding: 1rem 0;
+    z-index: 10;
+    border-radius: var(--media-radius);
+    display: none;
+  }
+  
+  details[open] > .header-dropdown__content {
+    display: block;
+    animation: slideDownFade 0.25s ease-out forwards;
+    transform-origin: top;
+  }
+
+  .header-dropdown__link {
+    display: block;
+    padding: 1rem 2rem;
+    color: rgb(var(--color-foreground));
+    text-decoration: none;
+    font-size: 1.4rem;
+    transition: background-color 0.2s, color 0.2s;
+  }
+  
+  .header-dropdown__link:hover,
+  .header-dropdown__link--active {
+    background-color: rgba(var(--color-foreground), 0.04);
+  }
+
+  .header-dropdown__submenu {
+    padding-left: 0;
+    background-color: rgba(var(--color-foreground), 0.02);
+  }
+  
+  .header-dropdown__submenu .header-dropdown__link {
+    padding-left: 3rem;
+    font-size: 1.3rem;
+    color: rgba(var(--color-foreground), 0.8);
+  }
+
+  @keyframes slideDownFade {
+    0% {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

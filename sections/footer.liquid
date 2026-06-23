@@ -1,0 +1,546 @@
+{% comment %}
+  Footer matching Impulse design
+{% endcomment %}
+<style>
+  .impulse-footer-wrapper {
+    background-color: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    font-family: var(--font-body-family);
+  }
+
+  .impulse-footer-promo {
+    background-color: {{ section.settings.promo_bg_color }};
+    color: {{ section.settings.promo_text_color }};
+    text-align: center;
+    padding: 1.5rem 2rem;
+    font-size: 1.3rem;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .impulse-footer {
+    max-width: var(--page-width);
+    margin: 0 auto;
+    padding: 6rem 2rem 4rem;
+  }
+
+  .impulse-footer__grid {
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media screen and (min-width: 750px) {
+    .impulse-footer__grid {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 3rem;
+      justify-content: space-between;
+    }
+  }
+
+  .impulse-footer__block {
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 2rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .impulse-footer__block {
+      flex: 1 1 calc(25% - 3rem);
+      padding-bottom: 0;
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+    .impulse-footer__block.newsletter-block {
+      flex: 1 1 calc(30% - 3rem); /* Slightly larger for newsletter */
+    }
+  }
+
+  .impulse-footer__title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 0 0 2rem;
+    color: {{ section.settings.text_color }};
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  @media screen and (min-width: 750px) {
+    .impulse-footer__title {
+      cursor: default;
+    }
+    .impulse-footer__title svg {
+      display: none;
+    }
+  }
+
+  .impulse-footer__title svg {
+    width: 12px;
+    height: 12px;
+    fill: currentColor;
+    transition: transform 0.3s;
+  }
+  .impulse-footer__title.is-open svg {
+    transform: rotate(180deg);
+  }
+
+  .impulse-footer__content {
+    display: none;
+  }
+  .impulse-footer__content.is-open {
+    display: block;
+  }
+
+  @media screen and (min-width: 750px) {
+    .impulse-footer__content {
+      display: block !important;
+    }
+  }
+
+  .impulse-footer__menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .impulse-footer__menu a {
+    text-decoration: none;
+    color: inherit;
+    font-size: 1.4rem;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+  }
+
+  .impulse-footer__menu a:hover {
+    opacity: 1;
+  }
+
+  .impulse-footer__text {
+    font-size: 1.4rem;
+    line-height: 1.6;
+    opacity: 0.8;
+    margin-bottom: 2rem;
+  }
+
+  .impulse-footer__newsletter-form {
+    position: relative;
+    margin-bottom: 2rem;
+  }
+
+  .impulse-footer__newsletter-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    color: inherit;
+    padding: 1rem 4rem 1rem 0;
+    font-size: 1.4rem;
+    outline: none;
+    border-radius: 0;
+    transition: border-color 0.2s;
+  }
+
+  .impulse-footer__newsletter-input:focus {
+    border-color: currentColor;
+  }
+
+  .impulse-footer__newsletter-input::placeholder {
+    color: inherit;
+    opacity: 0.6;
+  }
+
+  .impulse-footer__newsletter-btn {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 1rem 0 1rem 1rem;
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .impulse-footer__newsletter-btn:hover {
+    opacity: 1;
+  }
+
+  .impulse-footer__newsletter-btn svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+  }
+
+  .impulse-footer__social {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-wrap: wrap;
+  }
+
+  .impulse-footer__social a {
+    color: inherit;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .impulse-footer__social a:hover {
+    opacity: 1;
+  }
+
+  .impulse-footer__social svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+  }
+
+  .impulse-footer__bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-top: 4rem;
+    gap: 1.5rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .impulse-footer__bottom {
+      flex-direction: row;
+      justify-content: center;
+    }
+  }
+
+  .impulse-footer__copyright {
+    font-size: 1.2rem;
+    opacity: 0.6;
+  }
+
+  .impulse-footer__copyright a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .impulse-footer__copyright a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<div class="impulse-footer-wrapper">
+  {%- if section.settings.show_promo -%}
+    <div class="impulse-footer-promo">
+      {{ section.settings.promo_text }}
+    </div>
+  {%- endif -%}
+
+  <footer class="impulse-footer">
+    <div class="impulse-footer__grid">
+      {%- for block in section.blocks -%}
+        <div class="impulse-footer__block {% if block.type == 'newsletter' %}newsletter-block{% endif %}" {{ block.shopify_attributes }}>
+          {%- if block.settings.heading != blank -%}
+            <h2 class="impulse-footer__title" data-accordion-trigger>
+              {{ block.settings.heading | escape }}
+              <svg viewBox="0 0 14 8"><path d="M7 8L0 1.13 1.15 0 7 5.74 12.85 0 14 1.13z"/></svg>
+            </h2>
+          {%- endif -%}
+
+          <div class="impulse-footer__content" data-accordion-content>
+            {%- case block.type -%}
+              {%- when 'menu' -%}
+                <ul class="impulse-footer__menu">
+                  {%- if block.settings.heading == 'Shop' -%}
+                    <li><a href="/collections/women">Women</a></li>
+                    <li><a href="/collections/men">Men</a></li>
+                    <li><a href="/pages/the-lookbook">The Lookbook</a></li>
+                    <li><a href="{{ routes.search_url }}">Search</a></li>
+                  {%- elsif block.settings.heading == 'Information' -%}
+                    <li><a href="/pages/our-story">Our Story</a></li>
+                    <li><a href="/pages/faq">FAQ</a></li>
+                  {%- elsif block.settings.menu != blank -%}
+                    {%- for link in block.settings.menu.links -%}
+                      <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                    {%- endfor -%}
+                  {%- endif -%}
+                </ul>
+
+              {%- when 'newsletter' -%}
+                <div class="impulse-footer__text">
+                  {{ block.settings.text }}
+                </div>
+                
+                {%- form 'customer', id: 'ContactFooter', class: 'impulse-footer__newsletter-form' -%}
+                  <input type="hidden" name="contact[tags]" value="newsletter">
+                  <input
+                    id="NewsletterForm--{{ section.id }}"
+                    type="email"
+                    name="contact[email]"
+                    class="impulse-footer__newsletter-input"
+                    value="{{ form.email }}"
+                    aria-required="true"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    autocomplete="email"
+                    placeholder="Enter your email"
+                    required
+                  >
+                  <button type="submit" class="impulse-footer__newsletter-btn" name="commit" aria-label="Subscribe">
+                    <svg viewBox="0 0 24 24"><path d="M22 4H2C.9 4 0 4.9 0 6v12c0 1.1.9 2 2 2h20c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-10 6.25L2 8V6l10 6.25L22 6v2z"/></svg>
+                  </button>
+                  
+                  {%- if form.posted_successfully? -%}
+                    <p style="color: #4caf50; font-size: 1.3rem; margin-top: 1rem;">Thanks for subscribing!</p>
+                  {%- endif -%}
+                  {%- if form.errors -%}
+                    <p style="color: #ff6b6b; font-size: 1.3rem; margin-top: 1rem;">{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}</p>
+                  {%- endif -%}
+                {%- endform -%}
+
+              {%- when 'search' -%}
+                {%- if block.settings.text != blank -%}
+                  <div class="impulse-footer__text">
+                    {{ block.settings.text }}
+                  </div>
+                {%- endif -%}
+                <form action="{{ routes.search_url }}" method="get" class="impulse-footer__newsletter-form" role="search">
+                  <input
+                    type="search"
+                    name="q"
+                    class="impulse-footer__newsletter-input"
+                    value="{{ search.terms | escape }}"
+                    placeholder="Search products..."
+                  >
+                  <input type="hidden" name="options[prefix]" value="last">
+                  <button type="submit" class="impulse-footer__newsletter-btn" aria-label="Search">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                  </button>
+                </form>
+
+                {%- if block.settings.show_social -%}
+                  <ul class="impulse-footer__social">
+                    {%- if settings.social_instagram_link != blank -%}
+                      <li><a href="{{ settings.social_instagram_link }}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a></li>
+                    {%- endif -%}
+                    {%- if settings.social_facebook_link != blank -%}
+                      <li><a href="{{ settings.social_facebook_link }}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.593 1.323-1.325V1.325C24 .593 23.407 0 22.675 0z"/></svg></a></li>
+                    {%- endif -%}
+                    {%- if settings.social_youtube_link != blank -%}
+                      <li><a href="{{ settings.social_youtube_link }}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.377.55a3.016 3.016 0 0 0-2.122 2.136C0 8.07 0 12 0 12s0 3.93.501 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.55 9.377.55 9.377.55s7.505 0 9.377-.55a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a></li>
+                    {%- endif -%}
+                    {%- if settings.social_pinterest_link != blank -%}
+                      <li><a href="{{ settings.social_pinterest_link }}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.951-7.252 4.168 0 7.41 2.967 7.41 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.367 18.624 0 12.017 0z"/></svg></a></li>
+                    {%- endif -%}
+                    {%- if settings.social_tiktok_link != blank -%}
+                      <li><a href="{{ settings.social_tiktok_link }}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 15.68a6.34 6.34 0 0010.86 4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/></svg></a></li>
+                    {%- endif -%}
+                  </ul>
+                {%- endif -%}
+
+              {%- when 'policies' -%}
+                <ul class="impulse-footer__menu">
+                  {%- for policy in shop.policies -%}
+                    {%- if policy != blank -%}
+                      <li><a href="{{ policy.url }}">{{ policy.title }}</a></li>
+                    {%- endif -%}
+                  {%- endfor -%}
+                  <li><a href="{{ routes.contact_url | default: '/pages/contact' }}">Contact Us</a></li>
+                </ul>
+
+            {%- endcase -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    <div class="impulse-footer__bottom">
+      <div class="impulse-footer__copyright">
+        &copy; {{ 'now' | date: '%Y' }} {{ shop.name | link_to: routes.root_url }}. 
+        <a target="_blank" rel="nofollow" href="https://www.shopify.com?utm_campaign=poweredby&amp;utm_medium=shopify&amp;utm_source=onlinestore">Powered by Shopify</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    if (window.innerWidth >= 750) return; // Only run accordion on mobile
+
+    const triggers = document.querySelectorAll('.impulse-footer__title');
+    triggers.forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        const content = trigger.nextElementSibling;
+        if (!content || !content.hasAttribute('data-accordion-content')) return;
+        
+        trigger.classList.toggle('is-open');
+        content.classList.toggle('is-open');
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Footer (Impulse)",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#263238"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Announcement Bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_promo",
+      "label": "Show announcement",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "promo_text",
+      "label": "Announcement text",
+      "default": "FREE SHIPPING On all orders over $100"
+    },
+    {
+      "type": "color",
+      "id": "promo_bg_color",
+      "label": "Announcement background",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "color",
+      "id": "promo_text_color",
+      "label": "Announcement text color",
+      "default": "#000000"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Shop",
+          "label": "Heading"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "default": "footer",
+          "label": "Menu"
+        }
+      ]
+    },
+    {
+      "type": "newsletter",
+      "name": "Newsletter",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Sign up for updates",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "<p>Be the first to know about our biggest and best sales. We'll never send more than one email a month.</p>",
+          "label": "Text"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_social",
+          "default": true,
+          "label": "Show social icons"
+        }
+      ]
+    },
+    {
+      "type": "policies",
+      "name": "Policies & Contact",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Legal",
+          "label": "Heading"
+        }
+      ]
+    },
+    {
+      "type": "search",
+      "name": "Search Bar",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Search",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "<p>Find exactly what you're looking for.</p>",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      {
+        "type": "menu",
+        "settings": {
+          "heading": "Shop"
+        }
+      },
+      {
+        "type": "menu",
+        "settings": {
+          "heading": "The Company"
+        }
+      },
+      {
+        "type": "menu",
+        "settings": {
+          "heading": "Get Help"
+        }
+      },
+      {
+        "type": "newsletter",
+        "settings": {
+          "heading": "Sign up for updates"
+        }
+      }
+    ]
+  }
+}
+{% endschema %}

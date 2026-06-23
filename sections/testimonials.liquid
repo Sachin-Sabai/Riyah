@@ -1,0 +1,625 @@
+{{ 'component-slider.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  .eurus-testimonials {
+    background-color: {{ section.settings.background_color }};
+    overflow: hidden;
+  }
+
+  .eurus-testimonials__viewport {
+    overflow: hidden;
+    position: relative;
+    padding: 1rem 0 3rem;
+  }
+
+  .eurus-testimonials__track {
+    display: flex;
+    gap: 2rem;
+    transition: transform 400ms ease;
+    will-change: transform;
+  }
+
+  .eurus-testimonial-card {
+    flex: 0 0 100%;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  @media screen and (min-width: 750px) {
+    .eurus-testimonial-card {
+      flex: 0 0 calc((100% - 2rem) / 1.5);
+      flex-direction: row;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .eurus-testimonial-card {
+      flex: 0 0 calc((100% - 2rem) / 2);
+    }
+  }
+
+  .eurus-testimonial-card__image-container {
+    width: 100%;
+    aspect-ratio: 1;
+    position: relative;
+    background-color: #f3f3f3;
+  }
+  
+  @media screen and (min-width: 750px) {
+    .eurus-testimonial-card__image-container {
+      width: 40%;
+      aspect-ratio: auto;
+      min-height: 400px;
+    }
+  }
+
+  .eurus-testimonial-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .eurus-testimonial-card__placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: #f3f3f3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #a3a3a3;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .eurus-testimonial-card__placeholder svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .eurus-testimonial-card__content {
+    width: 100%;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media screen and (min-width: 750px) {
+    .eurus-testimonial-card__content {
+      width: 60%;
+    }
+  }
+
+  .eurus-testimonial-card__header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .eurus-testimonial-card__avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #f3f3f3;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .eurus-testimonial-card__avatar img,
+  .eurus-testimonial-card__avatar svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .eurus-testimonial-card__author-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .eurus-testimonial-card__name {
+    font-weight: 600;
+    font-size: 1.6rem;
+    margin: 0;
+    line-height: 1.2;
+    color: #333;
+  }
+
+  .eurus-testimonial-card__badge {
+    font-size: 1.2rem;
+    color: #666;
+    margin-top: 0.2rem;
+  }
+
+  .eurus-testimonial-card__rating {
+    display: flex;
+    gap: 0.2rem;
+    color: #c9a671;
+    margin-bottom: 1.5rem;
+  }
+  .eurus-testimonial-card__rating svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+
+  .eurus-testimonial-card__divider {
+    height: 1px;
+    background-color: #eaeaea;
+    width: 100%;
+    margin-bottom: 1.5rem;
+  }
+
+  .eurus-testimonial-card__quote {
+    font-size: 1.4rem;
+    line-height: 1.6;
+    color: #555;
+    margin: 0;
+    flex-grow: 1;
+  }
+
+  .eurus-testimonial-card__product {
+    margin-top: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background-color: #f8f9fa;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+  .eurus-testimonial-card__product:hover {
+    background-color: #f1f3f5;
+  }
+
+  .eurus-testimonial-card__product-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    background-color: #fff;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .eurus-testimonial-card__product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .eurus-testimonial-card__product-image svg {
+    width: 20px;
+    height: 20px;
+    fill: #a3a3a3;
+  }
+
+  .eurus-testimonial-card__product-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .eurus-testimonial-card__product-name {
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: #333;
+    line-height: 1.2;
+    margin-bottom: 0.2rem;
+  }
+
+  .eurus-testimonial-card__product-price {
+    font-size: 1.3rem;
+    color: #666;
+  }
+
+  /* Navigation Controls */
+  .eurus-slider-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+  .eurus-slider-btn {
+    background: #fff;
+    border: 1px solid #eaeaea;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+    color: #333;
+  }
+  .eurus-slider-btn:hover {
+    background: #f8f9fa;
+    border-color: #ccc;
+  }
+  .eurus-slider-btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .eurus-slider-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+{%- endstyle -%}
+
+<div class="eurus-testimonials section-{{ section.id }}-padding color-{{ section.settings.color_scheme }}">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <div class="title-wrapper-with-link title-wrapper--self-padded-mobile title-wrapper--no-top-margin">
+        <h2 class="title inline-richtext {{ section.settings.heading_size }}">{{ section.settings.heading | escape }}</h2>
+      </div>
+    {%- endif -%}
+
+    <div class="eurus-testimonials__viewport" id="Viewport-{{ section.id }}">
+      <div class="eurus-testimonials__track" id="Track-{{ section.id }}">
+        {%- for block in section.blocks -%}
+          <div class="eurus-testimonial-card" {{ block.shopify_attributes }}>
+            
+            <div class="eurus-testimonial-card__image-container">
+              {%- if block.settings.customer_image != blank -%}
+                <img class="eurus-testimonial-card__image" src="{{ block.settings.customer_image | image_url: width: 800 }}" alt="{{ block.settings.customer_image.alt | escape }}" loading="lazy" width="{{ block.settings.customer_image.width }}" height="{{ block.settings.customer_image.height }}">
+              {%- else -%}
+                <div class="eurus-testimonial-card__placeholder">
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                </div>
+              {%- endif -%}
+            </div>
+
+            <div class="eurus-testimonial-card__content">
+              
+              <div class="eurus-testimonial-card__header">
+                <div class="eurus-testimonial-card__avatar">
+                  {%- if block.settings.avatar_image != blank -%}
+                    <img src="{{ block.settings.avatar_image | image_url: width: 100 }}" alt="{{ block.settings.customer_name | escape }}" loading="lazy" width="{{ block.settings.avatar_image.width }}" height="{{ block.settings.avatar_image.height }}">
+                  {%- else -%}
+                    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                  {%- endif -%}
+                </div>
+                <div class="eurus-testimonial-card__author-info">
+                  <h3 class="eurus-testimonial-card__name">{{ block.settings.customer_name | escape }}</h3>
+                  <span class="eurus-testimonial-card__badge">Verified Customer</span>
+                </div>
+              </div>
+
+              <div class="eurus-testimonial-card__rating">
+                {%- for i in (1..block.settings.rating) -%}
+                  <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                {%- endfor -%}
+              </div>
+
+              <div class="eurus-testimonial-card__divider"></div>
+
+              <p class="eurus-testimonial-card__quote">{{ block.settings.quote | escape }}</p>
+
+              <div class="eurus-testimonial-card__product">
+                <div class="eurus-testimonial-card__product-image">
+                  {%- if block.settings.product_image != blank -%}
+                    <img src="{{ block.settings.product_image | image_url: width: 100 }}" alt="{{ block.settings.product_name | escape }}" loading="lazy" width="{{ block.settings.product_image.width }}" height="{{ block.settings.product_image.height }}">
+                  {%- else -%}
+                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                  {%- endif -%}
+                </div>
+                <div class="eurus-testimonial-card__product-info">
+                  <span class="eurus-testimonial-card__product-name">{{ block.settings.product_name | escape }}</span>
+                  <span class="eurus-testimonial-card__product-price">{{ block.settings.product_price | escape }}</span>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        {%- endfor -%}
+      </div>
+      
+      <div class="eurus-slider-controls">
+        <button class="eurus-slider-btn eurus-slider-btn--prev" id="PrevBtn-{{ section.id }}" aria-label="Previous slide" disabled>
+          <svg viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/></svg>
+        </button>
+        <button class="eurus-slider-btn eurus-slider-btn--next" id="NextBtn-{{ section.id }}" aria-label="Next slide">
+          <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const track = document.getElementById('Track-{{ section.id }}');
+    const prevBtn = document.getElementById('PrevBtn-{{ section.id }}');
+    const nextBtn = document.getElementById('NextBtn-{{ section.id }}');
+    
+    if (!track || !prevBtn || !nextBtn) return;
+
+    let currentIndex = 0;
+
+    function updateSlider() {
+      const cards = track.children;
+      if (cards.length === 0) return;
+      
+      const cardWidth = cards[0].offsetWidth;
+      const gap = parseFloat(window.getComputedStyle(track).gap) || 0;
+      const slideWidth = cardWidth + gap;
+      
+      const viewportWidth = track.parentElement.offsetWidth;
+      const visibleCards = Math.round(viewportWidth / slideWidth);
+      const maxIndex = Math.max(0, cards.length - visibleCards);
+      
+      if (currentIndex > maxIndex) currentIndex = maxIndex;
+      if (currentIndex < 0) currentIndex = 0;
+      
+      let targetTranslate = currentIndex * slideWidth;
+      const maxScroll = track.scrollWidth - viewportWidth;
+      
+      if (targetTranslate > maxScroll) {
+        targetTranslate = maxScroll;
+      }
+      
+      track.style.transform = `translateX(-${targetTranslate}px)`;
+      
+      prevBtn.disabled = currentIndex === 0;
+      nextBtn.disabled = currentIndex >= maxIndex;
+    }
+
+    prevBtn.addEventListener('click', () => {
+      currentIndex--;
+      updateSlider();
+    });
+
+    nextBtn.addEventListener('click', () => {
+      currentIndex++;
+      updateSlider();
+    });
+
+    window.addEventListener('resize', () => {
+      setTimeout(updateSlider, 100);
+    });
+    
+    {%- if section.settings.autoplay -%}
+      let autoplayInterval;
+      
+      function startAutoplay() {
+        stopAutoplay();
+        autoplayInterval = setInterval(() => {
+          const cards = track.children;
+          if (cards.length === 0) return;
+          const cardWidth = cards[0].offsetWidth;
+          const gap = parseFloat(window.getComputedStyle(track).gap) || 0;
+          const slideWidth = cardWidth + gap;
+          const viewportWidth = track.parentElement.offsetWidth;
+          const visibleCards = Math.round(viewportWidth / slideWidth);
+          const maxIndex = Math.max(0, cards.length - visibleCards);
+          
+          if (currentIndex < maxIndex) {
+            currentIndex++;
+          } else {
+            currentIndex = 0;
+          }
+          updateSlider();
+        }, {{ section.settings.speed | times: 1000 }});
+      }
+      
+      function stopAutoplay() {
+        clearInterval(autoplayInterval);
+      }
+      
+      startAutoplay();
+      
+      track.parentElement.addEventListener('mouseenter', stopAutoplay);
+      track.parentElement.addEventListener('mouseleave', startAutoplay);
+      track.parentElement.addEventListener('touchstart', stopAutoplay);
+      track.parentElement.addEventListener('touchend', startAutoplay);
+    {%- endif -%}
+
+    updateSlider();
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Testimonials Eurus Style",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Customer Reviews",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        { "value": "h2", "label": "Small" },
+        { "value": "h1", "label": "Medium" },
+        { "value": "h0", "label": "Large" }
+      ],
+      "default": "h1",
+      "label": "Heading size"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#fcfcfc"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Enable auto-scroll",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Autoplay speed",
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "customer_image",
+          "label": "Customer Photo (Large side image)"
+        },
+        {
+          "type": "image_picker",
+          "id": "avatar_image",
+          "label": "Avatar Image (Small circular photo)"
+        },
+        {
+          "type": "text",
+          "id": "customer_name",
+          "label": "Customer Name",
+          "default": "Mia D"
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "label": "Star Rating",
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Review Text",
+          "default": "This product completely changed my routine. The quality is simply unmatched!"
+        },
+        {
+          "type": "header",
+          "content": "Product Mention"
+        },
+        {
+          "type": "image_picker",
+          "id": "product_image",
+          "label": "Product Thumbnail"
+        },
+        {
+          "type": "text",
+          "id": "product_name",
+          "label": "Product Name",
+          "default": "Argan Milk Serum"
+        },
+        {
+          "type": "text",
+          "id": "product_price",
+          "label": "Product Price",
+          "default": "$90.00"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "customer_name": "Sarah J",
+            "rating": 5,
+            "quote": "Riyah pieces have completely transformed my wardrobe. The fit and fabric quality are unmatched - I get compliments every time I wear it.",
+            "product_name": "Classic Leather Jacket",
+            "product_price": "$80.00"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "customer_name": "Elena M",
+            "rating": 5,
+            "quote": "I've never felt more confident in an outfit. Riyah understands modern style without compromising on comfort.",
+            "product_name": "Tailored Wide-Leg Trousers",
+            "product_price": "$65.00"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "customer_name": "Jessica R",
+            "rating": 4,
+            "quote": "The attention to detail in every stitch is what sets Riyah apart. This is craftsmanship you can feel.",
+            "product_name": "Linen Shirt Dress",
+            "product_price": "$55.00"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "customer_name": "Amanda K",
+            "rating": 5,
+            "quote": "From casual to formal, Riyah has become my go-to brand. Quality that justifies every penny.",
+            "product_name": "Wool Blend Coat",
+            "product_price": "$120.00"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

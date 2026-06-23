@@ -1,0 +1,104 @@
+<div class="ugc-gallery section-{{ section.id }}-padding page-width">
+  {%- if section.settings.heading != blank -%}
+    <h2 class="h2" style="text-align: center; margin-bottom: 3rem;">{{ section.settings.heading | escape }}</h2>
+  {%- endif -%}
+
+  <div class="ugc-gallery__grid" style="column-count: 2; column-gap: var(--grid-mobile-horizontal-spacing);">
+    {%- for block in section.blocks -%}
+      <div class="ugc-gallery__item" {{ block.shopify_attributes }} style="break-inside: avoid; margin-bottom: var(--grid-mobile-horizontal-spacing); overflow: hidden; border-radius: var(--media-radius, 0);">
+        {%- if block.settings.image != blank -%}
+          <a href="{{ block.settings.link | default: '#' }}" style="display: block; width: 100%;">
+            <img src="{{ block.settings.image | image_url: width: 800 }}" alt="{{ block.settings.image.alt | escape }}" width="{{ block.settings.image.width }}" height="{{ block.settings.image.height }}" loading="lazy" style="width: 100%; height: auto; display: block; object-fit: cover; transition: transform 0.4s ease;">
+          </a>
+        {%- else -%}
+          <div style="width: 100%; display: flex; align-items: center; justify-content: center; background: #eee; aspect-ratio: 1;">
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+
+  {%- if section.settings.button_label != blank -%}
+    <div style="text-align: center; margin-top: 3rem;">
+      <a href="{{ section.settings.button_link }}" class="button button--secondary">{{ section.settings.button_label | escape }}</a>
+    </div>
+  {%- endif -%}
+</div>
+
+<style>
+  .ugc-gallery__item:hover img {
+    transform: scale(1.05);
+  }
+  @media screen and (min-width: 750px) {
+    .ugc-gallery__grid {
+      column-count: {{ section.settings.columns_desktop }} !important;
+      column-gap: var(--grid-desktop-horizontal-spacing) !important;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "UGC Gallery",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "@Riyah on Instagram",
+      "label": "Heading"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 3,
+      "max": 6,
+      "step": 1,
+      "default": 4,
+      "label": "Desktop columns"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "Follow Us",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "UGC Gallery",
+      "blocks": [
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" }
+      ]
+    }
+  ]
+}
+{% endschema %}

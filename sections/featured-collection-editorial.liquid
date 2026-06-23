@@ -1,0 +1,288 @@
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+
+<style>
+  .shoppable-image-section {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  .shoppable-image-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+  @media screen and (min-width: 990px) {
+    .shoppable-image-container {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+  }
+  
+  .shoppable-image-left {
+    position: relative;
+    width: 100%;
+  }
+  @media screen and (min-width: 990px) {
+    .shoppable-image-left {
+      width: 50%;
+      position: sticky;
+      top: 2rem;
+    }
+  }
+
+  .shoppable-image-wrapper {
+    position: relative;
+    width: 100%;
+    border-radius: var(--media-radius);
+    overflow: hidden;
+  }
+  .shoppable-image-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+  .shoppable-image-placeholder {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .shoppable-image-placeholder svg {
+    width: 50%;
+    height: 50%;
+    fill: #ccc;
+  }
+
+  .shoppable-hotspot {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    background: #fff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .shoppable-hotspot::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: #000;
+    border-radius: 50%;
+  }
+  .shoppable-hotspot:hover, .shoppable-hotspot.is-active {
+    transform: translate(-50%, -50%) scale(1.2);
+    box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.6);
+  }
+
+  .shoppable-products-right {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  @media screen and (min-width: 990px) {
+    .shoppable-products-right {
+      width: 50%;
+      padding-left: 2rem;
+    }
+  }
+
+  .shoppable-product-card {
+    transition: opacity 0.3s ease;
+  }
+  .shoppable-product-card.is-dimmed {
+    opacity: 0.4;
+  }
+</style>
+
+<div class="shoppable-image-section color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="h2" style="text-align: center; margin-bottom: 4rem;">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+
+    <div class="shoppable-image-container">
+      <!-- LEFT SIDE: IMAGE WITH HOTSPOTS -->
+      <div class="shoppable-image-left">
+        <div class="shoppable-image-wrapper">
+          {%- if section.settings.image != blank -%}
+            {{ section.settings.image | image_url: width: 1000 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 50vw, 100vw' }}
+          {%- else -%}
+            <div class="shoppable-image-placeholder">
+              {{ 'collection-1' | placeholder_svg_tag }}
+            </div>
+          {%- endif -%}
+
+          {%- for block in section.blocks -%}
+            <div class="shoppable-hotspot" 
+                 style="top: {{ block.settings.top_position }}%; left: {{ block.settings.left_position }}%;"
+                 data-product-id="{{ block.settings.product.id | default: forloop.index }}"
+                 {{ block.shopify_attributes }}>
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <!-- RIGHT SIDE: PRODUCTS -->
+      <div class="shoppable-products-right">
+        {%- for block in section.blocks -%}
+          <div class="shoppable-product-card" id="shoppable-product-{{ block.settings.product.id | default: forloop.index }}" data-product-id="{{ block.settings.product.id | default: forloop.index }}">
+            {%- if block.settings.product != blank -%}
+              {% render 'card-product',
+                card_product: block.settings.product,
+                media_aspect_ratio: 'portrait',
+                show_secondary_image: true,
+                show_vendor: false,
+                show_rating: false,
+                show_quick_add: true,
+                section_id: section.id
+              %}
+            {%- else -%}
+              {% render 'card-product', show_vendor: false %}
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const hotspots = document.querySelectorAll('.shoppable-hotspot');
+    const productCards = document.querySelectorAll('.shoppable-product-card');
+
+    hotspots.forEach(hotspot => {
+      hotspot.addEventListener('mouseenter', () => {
+        const targetId = hotspot.getAttribute('data-product-id');
+        
+        hotspot.classList.add('is-active');
+        
+        productCards.forEach(card => {
+          if (card.getAttribute('data-product-id') === targetId) {
+            card.classList.remove('is-dimmed');
+            card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          } else {
+            card.classList.add('is-dimmed');
+          }
+        });
+      });
+
+      hotspot.addEventListener('mouseleave', () => {
+        hotspot.classList.remove('is-active');
+        productCards.forEach(card => card.classList.remove('is-dimmed'));
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Shoppable Lookbook",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Shop This Look",
+      "label": "Heading"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Main Image",
+      "info": "Portrait or square images work best."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "hotspot",
+      "name": "Product Hotspot",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "range",
+          "id": "top_position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Vertical Position",
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "left_position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Horizontal Position",
+          "default": 50
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shoppable Lookbook",
+      "blocks": [
+        {
+          "type": "hotspot",
+          "settings": {
+            "top_position": 30,
+            "left_position": 40
+          }
+        },
+        {
+          "type": "hotspot",
+          "settings": {
+            "top_position": 60,
+            "left_position": 70
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
