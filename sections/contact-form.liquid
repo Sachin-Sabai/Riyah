@@ -1,5 +1,65 @@
 {{ 'section-contact-form.css' | asset_url | stylesheet_tag }}
 
+<style>
+  /* Fix overlapping labels and inputs */
+  .contact .field {
+    position: relative;
+    margin-bottom: 2.5rem;
+  }
+  .contact .field__input {
+    padding: 2.5rem 0 1rem 0 !important;
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(var(--color-foreground), 0.3) !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    font-size: 1.6rem !important;
+    line-height: 1.5 !important;
+    width: 100%;
+  }
+  .contact .field__input:focus {
+    border-bottom-color: rgb(var(--color-foreground)) !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  .contact .field__label {
+    position: absolute;
+    left: 0 !important;
+    top: 1.5rem !important;
+    font-size: 1.4rem !important;
+    letter-spacing: 0.05em;
+    color: rgba(var(--color-foreground), 0.6) !important;
+    transform: none !important;
+    transition: all 0.2s ease !important;
+    pointer-events: none;
+  }
+  
+  /* Floating label state */
+  .contact .field__input:focus ~ .field__label,
+  .contact .field__input:not(:placeholder-shown) ~ .field__label,
+  .contact .field__input:-webkit-autofill ~ .field__label {
+    top: 0 !important;
+    font-size: 1rem !important;
+    color: rgb(var(--color-foreground)) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  
+  /* Remove Chrome autofill blue background */
+  .contact .field__input:-webkit-autofill,
+  .contact .field__input:-webkit-autofill:hover, 
+  .contact .field__input:-webkit-autofill:focus, 
+  .contact .field__input:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 30px rgb(var(--color-background)) inset !important;
+      -webkit-text-fill-color: rgb(var(--color-foreground)) !important;
+      transition: background-color 5000s ease-in-out 0s;
+  }
+
+  .contact .text-area {
+    min-height: 120px !important;
+    resize: vertical;
+  }
+</style>
 {%- style -%}
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;

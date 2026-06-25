@@ -1,64 +1,91 @@
+{{ 'component-facets.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
+
 <style>
-  .riyah-collection-header {
-    text-align: center;
-    padding: 4rem 2rem 2rem;
+  .premium-collection-page {
+    width: 100%;
+    max-width: 90vw;
+    margin: 0 auto;
+    padding: 0;
   }
-  .riyah-collection-title {
+  
+  .premium-collection-header {
+    text-align: center;
+    padding: 6rem 0 4rem;
+  }
+  
+  .premium-collection-title {
     font-family: var(--font-heading-family);
     font-size: clamp(2.4rem, 4vw, 3.6rem);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     margin: 0;
+    font-weight: 600;
   }
   
-  .riyah-collection-toolbar {
+  /* Toolbar: Sticky, Minimal */
+  .premium-collection-toolbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
-    border-bottom: 1px solid rgba(var(--color-foreground), 0.1);
-    margin-bottom: 2px;
+    padding: 1.5rem 0;
     position: sticky;
     top: 0;
     background: rgb(var(--color-background));
     z-index: 10;
+    border-bottom: 1px solid rgba(var(--color-foreground), 0.08);
+    margin-bottom: 4rem;
+  }
+  
+  .premium-collection-toolbar .product-count {
+    font-size: 1.2rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(var(--color-foreground), 0.7);
   }
 
-  /* Editorial Edge-to-Edge Grid */
-  .riyah-collection-grid {
+  /* Grid Redesign - Pure, simple, unbroken */
+  .premium-collection-layout {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 2px;
+    gap: 10px; 
     padding: 0;
-    max-width: 100%;
-    margin: 0 auto;
+    margin: 0;
     list-style: none;
-    background: rgba(var(--color-foreground), 0.05); /* Forms the grid lines */
-    border-top: 2px solid rgba(var(--color-foreground), 0.05);
-  }
-
-  .riyah-collection-grid .grid__item {
-    background: rgb(var(--color-background));
+    width: 100%;
   }
 
   @media screen and (min-width: 990px) {
-    .riyah-collection-grid {
-      /* Force 3 columns on desktop for massive, premium images */
+    .premium-collection-layout {
       grid-template-columns: repeat(3, 1fr); 
     }
+  }
+
+  /* CRITICAL: Ensure items fill the column perfectly */
+  .premium-collection-item {
+    width: 100%;
+    display: block;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Pagination styling */
+  .premium-pagination {
+    margin-top: 8rem;
+    margin-bottom: 8rem;
   }
 </style>
 
 <collection-component view-event-payload="{{ collection | standard_event_data: 'view' | escape }}" data-collection-id="{{ collection.id }}">
-  <div class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}">
+  <div class="premium-collection-page color-{{ section.settings.color_scheme }}">
     
-
+    <div class="premium-collection-header">
+      <h1 class="premium-collection-title">{{ collection.title | escape }}</h1>
+    </div>
 
     {%- paginate collection.products by section.settings.products_per_page -%}
-      <div class="riyah-collection-toolbar">
+      <div class="premium-collection-toolbar">
         {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
-          {{ 'component-facets.css' | asset_url | stylesheet_tag }}
-          <script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
           <aside aria-labelledby="verticalTitle" class="facets-wrapper" id="main-collection-filters" data-id="{{ section.id }}">
             {% render 'facets', results: collection, enable_filtering: section.settings.enable_filtering, enable_sorting: section.settings.enable_sorting, filter_type: section.settings.filter_type, paginate: paginate %}
           </aside>
@@ -78,7 +105,7 @@
 
       <div class="product-grid-container" id="ProductGridContainer">
         {%- if collection.products.size == 0 -%}
-          <div class="collection collection--empty page-width" id="product-grid" data-id="{{ section.id }}">
+          <div class="collection collection--empty" id="product-grid" data-id="{{ section.id }}">
             <div class="loading-overlay gradient"></div>
             <div class="title-wrapper center">
               <h2 class="title title--primary">
@@ -91,16 +118,29 @@
         {%- else -%}
           <div class="collection">
             <div class="loading-overlay gradient"></div>
-            <ul id="product-grid" data-id="{{ section.id }}" class="riyah-collection-grid">
+            
+            <ul id="product-grid" data-id="{{ section.id }}" class="premium-collection-layout">
               {%- for product in collection.products -%}
-                <li class="grid__item">
-                  {% render 'card-product', card_product: product, show_secondary_image: section.settings.show_secondary_image, show_vendor: section.settings.show_vendor, show_quick_add: false %}
+                {%- assign lazy_load = true -%}
+                {%- if forloop.index <= 3 -%}
+                  {%- assign lazy_load = false -%}
+                {%- endif -%}
+                
+                <li class="premium-collection-item">
+                  {% render 'card-product', 
+                    card_product: product, 
+                    show_secondary_image: section.settings.show_secondary_image, 
+                    show_vendor: section.settings.show_vendor,
+                    lazy_load: lazy_load
+                  %}
                 </li>
               {%- endfor -%}
             </ul>
 
             {%- if paginate.pages > 1 -%}
-              {% render 'pagination', paginate: paginate, anchor: '' %}
+              <div class="premium-pagination">
+                {% render 'pagination', paginate: paginate, anchor: '' %}
+              </div>
             {%- endif -%}
           </div>
         {%- endif -%}
@@ -124,105 +164,15 @@
       "label": "t:sections.main-collection-product-grid.settings.products_per_page.label"
     },
     {
-      "type": "range",
-      "id": "columns_desktop",
-      "min": 1,
-      "max": 6,
-      "step": 1,
-      "default": 4,
-      "label": "t:sections.main-collection-product-grid.settings.columns_desktop.label"
-    },
-    {
-      "type": "select",
-      "id": "columns_mobile",
-      "default": "2",
-      "label": "t:sections.main-collection-product-grid.settings.columns_mobile.label",
-      "options": [
-        {
-          "value": "1",
-          "label": "t:sections.main-collection-product-grid.settings.columns_mobile.options__1.label"
-        },
-        {
-          "value": "2",
-          "label": "t:sections.main-collection-product-grid.settings.columns_mobile.options__2.label"
-        }
-      ]
-    },
-    {
       "type": "color_scheme",
       "id": "color_scheme",
       "label": "t:sections.all.colors.label",
-      "info": "t:sections.all.colors.has_cards_info",
       "default": "scheme-1"
-    },
-    {
-      "type": "header",
-      "content": "t:sections.main-collection-product-grid.settings.header__3.content"
-    },
-    {
-      "type": "select",
-      "id": "image_ratio",
-      "options": [
-        {
-          "value": "adapt",
-          "label": "t:sections.main-collection-product-grid.settings.image_ratio.options__1.label"
-        },
-        {
-          "value": "portrait",
-          "label": "t:sections.main-collection-product-grid.settings.image_ratio.options__2.label"
-        },
-        {
-          "value": "square",
-          "label": "t:sections.main-collection-product-grid.settings.image_ratio.options__3.label"
-        }
-      ],
-      "default": "adapt",
-      "label": "t:sections.main-collection-product-grid.settings.image_ratio.label"
-    },
-    {
-      "type": "select",
-      "id": "image_shape",
-      "options": [
-        {
-          "value": "default",
-          "label": "t:sections.all.image_shape.options__1.label"
-        },
-        {
-          "value": "arch",
-          "label": "t:sections.all.image_shape.options__2.label"
-        },
-        {
-          "value": "blob",
-          "label": "t:sections.all.image_shape.options__3.label"
-        },
-        {
-          "value": "chevronleft",
-          "label": "t:sections.all.image_shape.options__4.label"
-        },
-        {
-          "value": "chevronright",
-          "label": "t:sections.all.image_shape.options__5.label"
-        },
-        {
-          "value": "diamond",
-          "label": "t:sections.all.image_shape.options__6.label"
-        },
-        {
-          "value": "parallelogram",
-          "label": "t:sections.all.image_shape.options__7.label"
-        },
-        {
-          "value": "round",
-          "label": "t:sections.all.image_shape.options__8.label"
-        }
-      ],
-      "default": "default",
-      "label": "t:sections.all.image_shape.label"
     },
     {
       "type": "checkbox",
       "id": "show_secondary_image",
-      "default": false,
+      "default": true,
       "label": "t:sections.main-collection-product-grid.settings.show_secondary_image.label"
     },
     {
@@ -230,33 +180,6 @@
       "id": "show_vendor",
       "default": false,
       "label": "t:sections.main-collection-product-grid.settings.show_vendor.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_rating",
-      "default": false,
-      "label": "t:sections.main-collection-product-grid.settings.show_rating.label",
-      "info": "t:sections.main-collection-product-grid.settings.show_rating.info"
-    },
-    {
-      "type": "select",
-      "id": "quick_add",
-      "default": "none",
-      "label": "t:sections.main-collection-product-grid.settings.quick_add.label",
-      "options": [
-        {
-          "value": "none",
-          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_1"
-        },
-        {
-          "value": "standard",
-          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_2"
-        },
-        {
-          "value": "bulk",
-          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_3"
-        }
-      ]
     },
     {
       "type": "header",
@@ -294,30 +217,6 @@
       "id": "enable_sorting",
       "default": true,
       "label": "t:sections.main-collection-product-grid.settings.enable_sorting.label"
-    },
-    {
-      "type": "header",
-      "content": "t:sections.all.padding.section_padding_heading"
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "min": 0,
-      "max": 100,
-      "step": 4,
-      "unit": "px",
-      "label": "t:sections.all.padding.padding_top",
-      "default": 36
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "min": 0,
-      "max": 100,
-      "step": 4,
-      "unit": "px",
-      "label": "t:sections.all.padding.padding_bottom",
-      "default": 36
     }
   ]
 }

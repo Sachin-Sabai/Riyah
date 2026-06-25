@@ -21,6 +21,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: relative;
     padding: 1.5rem 2rem;
     background: rgb(var(--color-background));
     border-bottom: 1px solid rgba(var(--color-foreground), 0.1);
@@ -33,13 +34,17 @@
     letter-spacing: 0.15em;
     text-decoration: none;
     color: rgb(var(--color-foreground));
-    flex: 1;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     text-align: center;
+    z-index: 2;
   }
   .riyah-header__menu {
     flex: 1;
     display: flex;
     justify-content: flex-start;
+    z-index: 1;
   }
   .riyah-header__menu > nav > ul {
     list-style: none;

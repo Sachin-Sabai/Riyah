@@ -264,8 +264,8 @@
               {%- when 'menu' -%}
                 <ul class="impulse-footer__menu">
                   {%- if block.settings.heading == 'Shop' -%}
-                    <li><a href="/collections/women">Women</a></li>
-                    <li><a href="/collections/men">Men</a></li>
+                    <li><a href="{{ routes.collections_url }}/women">Women</a></li>
+                    <li><a href="{{ routes.collections_url }}/men">Men</a></li>
                     <li><a href="/pages/the-lookbook">The Lookbook</a></li>
                     <li><a href="{{ routes.search_url }}">Search</a></li>
                   {%- elsif block.settings.heading == 'Information' -%}
